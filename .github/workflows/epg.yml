@@ -1,0 +1,29 @@
+name: EPG Service
+
+on:
+  schedule:
+    - cron: "30 3 * * *" # every day at 3:30am UTC (9:00am IST)
+  push:
+    branches: [ main ]
+
+jobs:
+
+  epg:
+    name: EPG Setup
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get EPG Data
+      run: /bin/bash ./bin/epg_linux_x64
+    
+    - name: Update release
+      uses: johnwbyrd/update-release@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: ./bin/epg.xml ./bin/epg.xml.gz
+        tag: latest
+        prerelease: false
+
