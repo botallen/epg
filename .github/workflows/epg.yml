@@ -1,6 +1,7 @@
 name: EPG Service
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "30 3 * * *" # every day at 3:30am UTC (9:00am IST)
   push:
