@@ -14,9 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
     - name: Download binary
+      env:
+        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       run: |
-        curl -L $(curl -s https://1:${{ secrets.RELEASE_TOKEN }}@api.github.com/repos/iMro0t/epg/releases/latest | grep 'browser_' | grep 'epg_' | cut -d\" -f4 | sed 's/github.com/1:'${{ secrets.RELEASE_TOKEN }}'@github.com/g')
+        curl -u '1:${{ env.RELEASE_TOKEN }}' -H 'Accept: application/octet-stream' --output "epg_linux_amd64" -L $(curl -u '1:${{ env.RELEASE_TOKEN }}' https://api.github.com/repos/iMro0t/epg/releases/latest -s | jq -r '.assets[] | select(.name=="epg_linux_amd64") | .url')
+        chmod +x epg_linux_amd64
 
     - name: Get EPG Data
       run: ./epg_linux_amd64 -source jiotv
