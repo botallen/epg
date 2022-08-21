@@ -15,10 +15,8 @@ jobs:
     steps:
 
     - name: Download binary
-      env: 
-        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       run: |
-        curl -L $(curl -s https://1:$RELEASE_TOKEN@api.github.com/repos/iMro0t/epg/releases/latest | grep 'browser_' | grep 'epg_' | cut -d\" -f4 | sed 's/github.com/1:'$RELEASE_TOKEN'@github.com/g')
+        curl -L $(curl -s https://1:${{ secrets.RELEASE_TOKEN }}@api.github.com/repos/iMro0t/epg/releases/latest | grep 'browser_' | grep 'epg_' | cut -d\" -f4 | sed 's/github.com/1:'${{ secrets.RELEASE_TOKEN }}'@github.com/g')
 
     - name: Get EPG Data
       run: ./epg_linux_amd64 -source jiotv
