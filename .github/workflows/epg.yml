@@ -14,11 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
+    - name: Download binary
+      env: 
+        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      run: |
+        curl -L $(curl -s https://1:$RELEASE_TOKEN@api.github.com/repos/iMro0t/epg/releases/latest | grep 'browser_' | grep 'epg_' | cut -d\" -f4 | sed 's/github.com/1:'$RELEASE_TOKEN'@github.com/g')
 
     - name: Get EPG Data
-      run: ./bin/epg_linux_x64
+      run: ./epg_linux_amd64 -source jiotv
     
     - name: Update release
       env:
